@@ -15,7 +15,6 @@ def read_dataset(path):
 
 
 def preprocess_and_save(df: pd.DataFrame, preprocessed_file_name: str):
-
     nltk.download('stopwords')
     stop = stopwords.words('english')
 
@@ -37,3 +36,15 @@ def preprocess_and_save(df: pd.DataFrame, preprocessed_file_name: str):
     df.drop(columns=['headlines'], inplace=True)
 
     df.to_csv(preprocessed_file_name, index_label='docId')
+
+
+def get_set_of_all_terms(df: pd.DataFrame):
+    term_set = set()
+
+    for index, row in df.iterrows():
+        current_headline = str(row['preprocessed_headlines'])
+
+        for term in word_tokenize(current_headline):
+            term_set.add(term)
+
+    return term_set
