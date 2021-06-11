@@ -14,7 +14,7 @@ def run_k_means(df: pd.DataFrame, number_of_clusters: int):
 
 # sklearn.DBSCAN uses Euclidean distance as default but can be changed to cosine
 def run_dbscan(df: pd.DataFrame, epsilon, minimum_samples):
-    print('Running DBScAN with epsilon: ', epsilon, ' minimum samples: ', minimum_samples)
+    print('Running DBSCAN with epsilon: ', epsilon, ' minimum samples: ', minimum_samples)
     dbscan = DBSCAN(eps=epsilon, min_samples=minimum_samples).fit(df)
 
     score = silhouette_score(df, dbscan.labels_, metric='euclidean')

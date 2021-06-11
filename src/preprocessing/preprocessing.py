@@ -14,6 +14,13 @@ def read_dataset(path):
     return df
 
 
+def read_dataset_with_index(path, index_column):
+    df = pd.read_csv(path, index_col=index_column)
+    df_size = len(df)
+    print('Data Size: ' + str(df_size))
+    return df
+
+
 def preprocess_and_save(df: pd.DataFrame, preprocessed_file_name: str):
     nltk.download('stopwords')
     stop = stopwords.words('english')
@@ -24,12 +31,25 @@ def preprocess_and_save(df: pd.DataFrame, preprocessed_file_name: str):
         current_headline = row['headlines']
         preprocessed_headline = ''
 
-        # For each term remove stopwords, punctuation symbols.
-        # Also change token to lowercase letter version.
         for term in word_tokenize(current_headline):
+            # Lowercase the token
             term = term.lower()
-            if term not in stop and term not in string.punctuation:
-                preprocessed_headline += term + ' '
+
+            # Remove non printable characters
+            characters_to_hold = set(string.ascii_letters + string.digits)
+            for character in term:
+                if character not in characters_to_hold:
+                    term = term.replace(character, "")
+
+            # Remove hyphens and apostrophes from terms
+            # term = term.replace("'", "")
+            # term = term.replace("-", "")
+
+            # Remove single word terms and words that are stopwords
+            if len(term) < 2 or term in stop:
+                continue
+
+            preprocessed_headline += term + ' '
 
         df.loc[index, 'preprocessed_headlines'] = preprocessed_headline[:-1]
 

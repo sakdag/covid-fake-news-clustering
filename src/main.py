@@ -28,19 +28,30 @@ if __name__ == '__main__':
         prep.preprocess_and_save(df, news_dataset_preprocessed_file_name)
 
     elif mode == 'generate_vectors':
-        df = prep.read_dataset(news_dataset_preprocessed_file_name)
+        df = prep.read_dataset_with_index(news_dataset_preprocessed_file_name, 'docId')
+
         vg.generate_raw_term_frequency_vectors(df, raw_term_frequency_vectors_file_name)
         vg.generate_tf_idf_vectors(df, tf_idf_vectors_file_name)
-        vg.generate_only_nouns_vectors_file_name(df, tf_idf_only_nouns_vectors_file_name)
-        vg.generate_top_100_vectors_file_name(df, tf_idf_top_100_vectors_file_name)
+        vg.generate_only_nouns_vectors(df, tf_idf_only_nouns_vectors_file_name)
+        vg.generate_top_100_vectors(df, tf_idf_top_100_vectors_file_name)
 
     elif mode == 'cluster':
-        vectors_df = prep.read_dataset(raw_term_frequency_vectors_file_name)
+        vector_dataframes = list()
 
-        # Run k_means with 10, 50 and 100 clusters
-        clustering.run_k_means(vectors_df, 10)
-        clustering.run_k_means(vectors_df, 50)
-        clustering.run_k_means(vectors_df, 100)
+        vector_dataframes.append(prep.read_dataset(raw_term_frequency_vectors_file_name))
+        vector_dataframes.append(prep.read_dataset(tf_idf_vectors_file_name))
+        vector_dataframes.append(prep.read_dataset(tf_idf_only_nouns_vectors_file_name))
+        vector_dataframes.append(prep.read_dataset(tf_idf_top_100_vectors_file_name))
 
-        # Run DBSCAN with different epsilon and minimum samples hyper-parameters
-        clustering.run_dbscan(vectors_df, 2, 2)
+        for df in vector_dataframes:
+            df.drop(columns=['docId'], inplace=True)
+
+            # Run k_means with 10, 50 and 100 clusters
+            clustering.run_k_means(df, 10)
+            clustering.run_k_means(df, 50)
+            clustering.run_k_means(df, 100)
+
+            # Run DBSCAN with different epsilon and minimum samples hyper-parameters
+            clustering.run_dbscan(df, 2, 2)
+
+            print("--------------------------------\n\n")
