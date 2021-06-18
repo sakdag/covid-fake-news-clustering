@@ -36,17 +36,17 @@ def preprocess_and_save(df: pd.DataFrame, preprocessed_file_name: str):
             term = term.lower()
 
             # Remove non printable characters
-            characters_to_hold = set(string.ascii_letters + string.digits)
-            for character in term:
-                if character not in characters_to_hold:
-                    term = term.replace(character, "")
+            # characters_to_hold = set(string.ascii_letters + string.digits)
+            # for character in term:
+            #     if character not in characters_to_hold:
+            #         term = term.replace(character, "")
 
             # Remove hyphens and apostrophes from terms
             # term = term.replace("'", "")
             # term = term.replace("-", "")
 
             # Remove single word terms and words that are stopwords
-            if len(term) < 2 or term in stop:
+            if len(term) < 2 or term in stop or term in string.punctuation:
                 continue
 
             preprocessed_headline += term + ' '

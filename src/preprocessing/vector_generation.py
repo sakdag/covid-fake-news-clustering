@@ -124,21 +124,20 @@ def generate_idf_map(df: pd.DataFrame, term_idf_map_file_name: str = '', save: b
     # Count how many headlines each term appears in
     for index, row in df.iterrows():
         current_headline = row['preprocessed_headlines']
+        token_list = word_tokenize(current_headline)
 
-        # Used to check if token is already considered for headline
-        token_set = set()
+        # Remove duplicates
+        token_list_wo_duplicates = list(dict.fromkeys(token_list))
 
-        for token in word_tokenize(current_headline):
-            if token not in token_set:
-                if token in idf_dict.keys():
-                    idf_dict[token] += 1
-                else:
-                    idf_dict[token] = 1
-            token_set.add(token)
+        for token in token_list_wo_duplicates:
+            if token in idf_dict.keys():
+                idf_dict[token] += 1
+            else:
+                idf_dict[token] = 1
 
     # Compute IDF
     for key in sorted(idf_dict.keys()):
-        idf_dict[key] = 1 + math.log(total_number_of_docs / idf_dict[key], 10)
+        idf_dict[key] = 1 + math.log(total_number_of_docs / int(idf_dict[key]), 10)
 
     if save:
         f = open(term_idf_map_file_name, "w")
