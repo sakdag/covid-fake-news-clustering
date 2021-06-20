@@ -5,6 +5,9 @@ FAKE_NEWS_PREPROCESSED_DATA_FILE_PATH = 'data/FakeNewsDataPreprocessed.csv'
 # File to store IDF values of each term
 TERM_IDF_VALUES_FILE_PATH = 'data/TermIDFMap.txt'
 
+# File to store top 100 terms
+TOP_100_TERMS_FILE_PATH = 'data/Top100Terms.txt'
+
 # Saved vectors for each variant
 RAW_TERM_FREQ_VECTORS_FILE_PATH = 'data/RawTermFreqVectors.csv'
 TFIDF_VECTORS_FILE_PATH = 'data/TFIDFVectors.csv'

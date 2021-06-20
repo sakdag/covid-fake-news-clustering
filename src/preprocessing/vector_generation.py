@@ -39,8 +39,19 @@ def generate_tf_idf_vectors(df: pd.DataFrame, tf_idf_vectors_csv_file_name: str)
     for index, row in df.iterrows():
         current_headline = str(row['preprocessed_headlines'])
 
+        # If you want to apply maximum frequency normalization, comment out 2 lines below
+        # and open the ones below that
         for term in idf_dict.keys():
             tf_idf_dict[term].append(current_headline.count(term) * idf_dict[term])
+
+        # # Apply maximum frequency normalization
+        # max_count = 0
+        # for term in word_tokenize(current_headline):
+        #     if current_headline.count(term) > max_count:
+        #         max_count = current_headline.count(term)
+        #
+        # for term in idf_dict.keys():
+        #     tf_idf_dict[term].append((0.5 + ((current_headline.count(term) * 0.5) / max_count)) * idf_dict[term])
 
     tf_idf_dataframe = pd.DataFrame(tf_idf_dict)
     tf_idf_dataframe.to_csv(tf_idf_vectors_csv_file_name, index_label='docId')
@@ -69,7 +80,8 @@ def generate_only_nouns_vectors(df: pd.DataFrame, tf_idf_only_nouns_vectors_file
     generate_tf_idf_vectors(modified_df, tf_idf_only_nouns_vectors_file_name)
 
 
-def generate_top_100_vectors(df: pd.DataFrame, tf_idf_top_100_vectors_file_name: str):
+def generate_top_100_vectors(df: pd.DataFrame, tf_idf_top_100_vectors_file_name: str,
+                             save_top_100: bool = False, save_file_name: str = 'Top100Words.txt'):
     idf_dict = generate_idf_map(df)
     global_tf_idf_dict = generate_global_tf_idf_dict(df, idf_dict)
 
@@ -80,6 +92,12 @@ def generate_top_100_vectors(df: pd.DataFrame, tf_idf_top_100_vectors_file_name:
             break
         top_100_terms.append(element[0])
         count += 1
+
+    if save_top_100:
+        f = open(save_file_name, "w")
+        for term in top_100_terms:
+            f.write(str(term) + ', ')
+        f.close()
 
     modified_df = df.copy()
     for index, row in modified_df.iterrows():

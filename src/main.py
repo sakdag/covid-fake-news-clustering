@@ -29,6 +29,8 @@ if __name__ == '__main__':
     tf_idf_top_100_vectors_file_name = os.path.join(dirname, conf.TFIDF_TOP100_VECTORS_FILE_PATH)
     tf_idf_only_nouns_vectors_file_name = os.path.join(dirname, conf.TFIDF_ONLY_NOUNS_VECTORS_FILE_PATH)
 
+    top_100_terms_file_name = os.path.join(dirname, conf.TOP_100_TERMS_FILE_PATH)
+
     if mode == 'preprocess':
         df = prep.read_dataset(news_dataset_file_name)
         prep.preprocess_and_save(df, news_dataset_preprocessed_file_name)
@@ -42,7 +44,7 @@ if __name__ == '__main__':
             if vectors_name == 'TFIDF':
                 vg.generate_tf_idf_vectors(df, tf_idf_vectors_file_name)
             if vectors_name == 'TFIDFTop100':
-                vg.generate_top_100_vectors(df, tf_idf_top_100_vectors_file_name)
+                vg.generate_top_100_vectors(df, tf_idf_top_100_vectors_file_name, True, top_100_terms_file_name)
             if vectors_name == 'TFIDFOnlyNouns':
                 vg.generate_only_nouns_vectors(df, tf_idf_only_nouns_vectors_file_name)
 
@@ -62,16 +64,17 @@ if __name__ == '__main__':
         for key in vector_dataframes.keys():
             df = vector_dataframes[key]
             df.drop(columns=['docId'], inplace=True)
-            df.sample(frac=1)
 
             print('Running experiments on vectors of ', key)
 
             # Run k_means with 10, 50 and 100 clusters
             clustering.run_k_means(df, 10)
-            # clustering.run_k_means(df, 50)
-            # clustering.run_k_means(df, 100)
+            clustering.run_k_means(df, 50)
+            clustering.run_k_means(df, 100)
 
             # Run DBSCAN with different epsilon and minimum samples hyper-parameters
-            clustering.run_dbscan(df, 3, 2)
+            clustering.run_dbscan(df, 1, 2)
+            clustering.run_dbscan(df, 2, 2)
+            clustering.run_dbscan(df, 2, 3)
 
             print("--------------------------------\n\n")

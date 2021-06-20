@@ -3,7 +3,7 @@ import string
 import nltk
 import numpy as np
 import pandas as pd
-from nltk import word_tokenize
+from nltk import word_tokenize, WordNetLemmatizer, PorterStemmer
 from nltk.corpus import stopwords
 
 
@@ -24,6 +24,8 @@ def read_dataset_with_index(path, index_column):
 def preprocess_and_save(df: pd.DataFrame, preprocessed_file_name: str):
     nltk.download('stopwords')
     stop = stopwords.words('english')
+    lemmatizer = WordNetLemmatizer()
+    ps = PorterStemmer()
 
     df['preprocessed_headlines'] = np.NaN
 
@@ -36,17 +38,19 @@ def preprocess_and_save(df: pd.DataFrame, preprocessed_file_name: str):
             term = term.lower()
 
             # Remove non printable characters
-            # characters_to_hold = set(string.ascii_letters + string.digits)
-            # for character in term:
-            #     if character not in characters_to_hold:
-            #         term = term.replace(character, "")
+            characters_to_hold = set(string.ascii_letters + string.digits)
+            for character in term:
+                if character not in characters_to_hold:
+                    term = term.replace(character, "")
 
-            # Remove hyphens and apostrophes from terms
-            # term = term.replace("'", "")
-            # term = term.replace("-", "")
+            # Lemmatization
+            # term = lemmatizer.lemmatize(term)
+
+            # Stemming
+            term = ps.stem(term)
 
             # Remove single word terms and words that are stopwords
-            if len(term) < 2 or term in stop or term in string.punctuation:
+            if len(term) < 2 or term in stop:
                 continue
 
             preprocessed_headline += term + ' '
