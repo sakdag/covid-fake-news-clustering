@@ -1,5 +1,6 @@
 import math
 
+import nltk
 import pandas as pd
 from nltk import word_tokenize, pos_tag
 import src.preprocessing.preprocessing as prep
@@ -60,6 +61,7 @@ def generate_tf_idf_vectors(df: pd.DataFrame, tf_idf_vectors_csv_file_name: str)
 def generate_only_nouns_vectors(df: pd.DataFrame, tf_idf_only_nouns_vectors_file_name: str):
     # Modify dataset so that preprocessed_headlines holds only nouns
     # versions of the headlines, then utilize generate_tf_idf_vectors
+    nltk.download('averaged_perceptron_tagger')
 
     modified_df = df.copy()
     for index, row in modified_df.iterrows():

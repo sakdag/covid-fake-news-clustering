@@ -23,9 +23,11 @@ def read_dataset_with_index(path, index_column):
 
 def preprocess_and_save(df: pd.DataFrame, preprocessed_file_name: str):
     nltk.download('stopwords')
+    nltk.download('wordnet')
+    nltk.download('punkt')
     stop = stopwords.words('english')
     lemmatizer = WordNetLemmatizer()
-    ps = PorterStemmer()
+    # ps = PorterStemmer()
 
     df['preprocessed_headlines'] = np.NaN
 
@@ -38,18 +40,18 @@ def preprocess_and_save(df: pd.DataFrame, preprocessed_file_name: str):
             term = term.lower()
 
             # Remove non printable characters
-            characters_to_hold = set(string.ascii_letters + string.digits)
-            for character in term:
-                if character not in characters_to_hold:
-                    term = term.replace(character, "")
+            # characters_to_hold = set(string.ascii_letters + string.digits)
+            # for character in term:
+            #     if character not in characters_to_hold:
+            #         term = term.replace(character, "")
 
             # Lemmatization
-            # term = lemmatizer.lemmatize(term)
+            term = lemmatizer.lemmatize(term)
 
             # Stemming
-            term = ps.stem(term)
+            # term = ps.stem(term)
 
-            # Remove single word terms and words that are stopwords
+            # Remove single letter terms and terms that are stopwords
             if len(term) < 2 or term in stop:
                 continue
 
