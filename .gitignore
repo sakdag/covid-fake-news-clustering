@@ -130,8 +130,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-/src/data/FakeNewsDataPreprocessed.csv
-/src/data/RawTermFreqVectors.csv
-/src/data/TFIDFOnlyNounsVectors.csv
-/src/data/TFIDFTop100Vectors.csv
-/src/data/TFIDFVectors.csv
+/data/FakeNewsDataPreprocessed.csv
+/data/RawTermFreqVectors.csv
+/data/TFIDFOnlyNounsVectors.csv
+/data/TFIDFTop100Vectors.csv
+/data/TFIDFVectors.csv

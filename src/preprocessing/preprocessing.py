@@ -1,8 +1,8 @@
-import string
-
 import nltk
+
 import numpy as np
 import pandas as pd
+
 from nltk import word_tokenize, WordNetLemmatizer, PorterStemmer
 from nltk.corpus import stopwords
 
